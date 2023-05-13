@@ -1,0 +1,35 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+    
+model Amzn {
+  id        Int      @id @default(autoincrement())
+  v         Float
+  vw        Float
+  o         Float
+  c         Float
+  highestPriceOfTheDay Float
+  lowestPriceOfTheDay Float
+  timestamp Float
+  n         Int
+}
+
+model Goog {
+  id        Int      @id @default(autoincrement())
+  v         Float
+  vw        Float
+  o         Float
+  c         Float
+  highestPriceOfTheDay Float
+  lowestPriceOfTheDay Float
+  timestamp Float
+  n         Int
+}

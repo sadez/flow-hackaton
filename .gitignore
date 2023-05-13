@@ -1,0 +1,10 @@
+node_modules
+
+/.cache
+/build
+/public/build
+.env
+
+/prisma/AMZN-stock-price.json
+/prisma/GOOG-stock-price.json
+/prisma/dev.db
