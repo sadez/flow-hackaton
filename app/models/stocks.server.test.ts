@@ -25,9 +25,7 @@ describe("Stock model", () => {
     await prisma.amzn.create({ data: amazonMocks[3] })
     
 
-    const amazonsStocks = await getAmazonsStocks()
-    console.log(amazonsStocks);
-    
+    const amazonsStocks = await getAmazonsStocks()    
     expect(amazonsStocks[0].highestPriceOfTheDay).toBeGreaterThanOrEqual(100)
   })
 })

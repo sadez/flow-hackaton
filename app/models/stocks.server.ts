@@ -1,7 +1,7 @@
 import { db } from '~/utils/db.server';
 import { Amzn, Goog } from '@prisma/client';
 
-export function getAmazonsStocks() {
+export function getAmazonsStocks() {    
   return db.amzn.findMany();
 }
 

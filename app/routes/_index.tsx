@@ -3,13 +3,32 @@ import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import TableHeader from '~/components/TableHeader';
 import { getAmazonsStocks, getGooglesStocks } from '~/models/stocks.server';
-import { db } from '~/utils/db.server';
 
 export const loader = async () => {
 
   const amazonsStocks = await getAmazonsStocks();
-  const googleStocks = await getGooglesStocks();
+  console.log(amazonsStocks);
+  // get highestPriceOfTheDay (the vertices of a curve of array) 
+  // let pics = []
+  // let highestPriceOfTheDay = 0
+  // let lowestPriceOfTheDay = 0
+  // let id = 0
+  // let timestamp = 0
+  // for (let i = 0; i < amazonsStocks.length; i++) {
+  //   if (amazonsStocks[i].highestPriceOfTheDay > highestPriceOfTheDay) {
+  //     highestPriceOfTheDay = amazonsStocks[i].highestPriceOfTheDay
+  //     lowestPriceOfTheDay = amazonsStocks[i].lowestPriceOfTheDay
+  //     id = amazonsStocks[i].id
+  //     timestamp = amazonsStocks[i].timestamp
+  //   }
+  // }
+  // pics.push({ highestPriceOfTheDay, lowestPriceOfTheDay, id, timestamp })
 
+  // console.log(pics);
+  
+
+  const googleStocks = await getGooglesStocks();
+ 
   return json({
     amazonStocks: amazonsStocks,
     googleStocks: googleStocks,
