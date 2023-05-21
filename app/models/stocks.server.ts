@@ -1,10 +1,14 @@
 import { db } from '~/utils/db.server';
-import { Amzn, Goog } from '@prisma/client';
+import amazonData from "../../prisma/AMZN-stock-price.json";
+import googleData from "../../prisma/GOOG-stock-price.json"; 
 
 export function getAmazonsStocks() {    
-  return db.amzn.findMany();
+
+  return amazonData
+  // return db.amzn.findMany();
 }
 
 export function getGooglesStocks() {
-  return db.goog.findMany();
+  return googleData
+  // return db.goog.findMany();
 }

@@ -1,37 +1,31 @@
-import { Flex, Table, TableContainer, Tbody, Td, Tfoot, Th, Thead, Tr } from '@chakra-ui/react';
+import { Box, Container, Divider, Heading, Table, TableContainer, Tbody, Td, Text, Tr } from '@chakra-ui/react';
 import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import TableHeader from '~/components/TableHeader';
 import { getAmazonsStocks, getGooglesStocks } from '~/models/stocks.server';
+import { getOperationsFromTwoStocks } from '~/utils/utils';
+
+const INITIAL_AMOUNT = 100000;
 
 export const loader = async () => {
+  let initialAmount: number = INITIAL_AMOUNT;
+  var startTime = performance.now();
 
   const amazonsStocks = await getAmazonsStocks();
-  console.log(amazonsStocks);
-  // get highestPriceOfTheDay (the vertices of a curve of array) 
-  // let pics = []
-  // let highestPriceOfTheDay = 0
-  // let lowestPriceOfTheDay = 0
-  // let id = 0
-  // let timestamp = 0
-  // for (let i = 0; i < amazonsStocks.length; i++) {
-  //   if (amazonsStocks[i].highestPriceOfTheDay > highestPriceOfTheDay) {
-  //     highestPriceOfTheDay = amazonsStocks[i].highestPriceOfTheDay
-  //     lowestPriceOfTheDay = amazonsStocks[i].lowestPriceOfTheDay
-  //     id = amazonsStocks[i].id
-  //     timestamp = amazonsStocks[i].timestamp
-  //   }
-  // }
-  // pics.push({ highestPriceOfTheDay, lowestPriceOfTheDay, id, timestamp })
-
-  // console.log(pics);
-  
-
   const googleStocks = await getGooglesStocks();
- 
+
+  // order stocks by timestamp
+  await amazonsStocks.sort((a, b) => a.timestamp - b.timestamp);
+  await googleStocks.sort((a, b) => a.timestamp - b.timestamp);
+
+  // find peaks and troughs
+
+  let arrOprs = await getOperationsFromTwoStocks(initialAmount, amazonsStocks, googleStocks);
+  var endTime = performance.now();
+
   return json({
-    amazonStocks: amazonsStocks,
-    googleStocks: googleStocks,
+    listOfOperations: arrOprs,
+    performanceTime: endTime - startTime,
   });
 };
 
@@ -39,51 +33,47 @@ export default function IndexRoute() {
   const data = useLoaderData<typeof loader>();
 
   return (
-    <Flex>
-      <TableContainer>
-        <Table variant='simple'>
-          <TableHeader />
-         
-          <Tbody>
-            {data.amazonStocks.map(({ highestPriceOfTheDay, lowestPriceOfTheDay, id, timestamp }) => (
-              <Tr key={id}>
-                <Td>{highestPriceOfTheDay}</Td>
-                <Td>{lowestPriceOfTheDay}</Td>
-                <Td>{id}</Td>
-                <Td>
-                  {new Date(timestamp).toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
-                  })}
-                </Td>
-              </Tr>
-            ))}
-          </Tbody>
-        </Table>
-      </TableContainer>
-      <TableContainer>
-        <Table variant='simple'>
-          <TableHeader />
-          <Tbody>
-            {data.googleStocks.map(({ highestPriceOfTheDay, lowestPriceOfTheDay, id, timestamp }) => (
-              <Tr key={id}>
-                <Td>{highestPriceOfTheDay}</Td>
-                <Td>{lowestPriceOfTheDay}</Td>
-                <Td>{id}</Td>
-                <Td>
-                  {new Date(timestamp).toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
-                  })}
-                </Td>
-              </Tr>
-            ))}
-          </Tbody>
-      
-        </Table>
-      </TableContainer>
-    </Flex>
+    <Container maxW='container.xl'>
+      <Heading as='h1' size='xl' my='10'>
+        Meilleur moment pour acheter et pour vendre
+      </Heading>
+      <Divider mb='10' />
+      <Text fontSize='md' mb='10'>
+        Liste des achats et ventes quotidiens de Salim
+      </Text>
+
+      <Box overflow={'auto'} height={'xl'} my={10}>
+        <TableContainer mb='10'>
+          <Table variant='striped' borderWidth={1}>
+            <TableHeader />
+
+            <Tbody>
+              {data.listOfOperations.map(({ operation, stock, amount, price, inHands, timestamp, total }) => (
+                <Tr key={timestamp + price}>
+                  <Td>
+                    {/* format to 01/12/2022 */}
+                    {new Date(timestamp).toLocaleDateString('fr-FR', {
+                      year: 'numeric',
+                      month: 'numeric',
+                      day: 'numeric',
+                    })}
+                  </Td>
+                  <Td color={operation === 'buy' ? 'green.500' : 'red.500'}>{operation === 'buy' ? 'Achat' : 'Vente'}</Td>
+                  <Td>{stock.toUpperCase()}</Td>
+                  <Td>{price + ' €'}</Td>
+                  <Td>{amount}</Td>
+                  <Td>{total.toFixed(2) + ' €'}</Td>
+                  <Td>{inHands.toFixed(2) + ' €'} </Td>
+                </Tr>
+              ))}
+            </Tbody>
+          </Table>
+        </TableContainer>
+      </Box>
+
+      <Text fontSize='md' mb='10'>
+        Temps total d'exécution : {data.performanceTime.toFixed(2)} ms
+      </Text>
+    </Container>
   );
 }

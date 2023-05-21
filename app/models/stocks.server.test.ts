@@ -1,32 +1,54 @@
-import { unSeed } from 'prisma/unSeed';
-import { getAmazonsStocks, getGooglesStocks} from './stocks.server'
-import  {amazonMocks}  from 'mocks/stocks'
-import type { Amzn,Goog} from "@prisma/client";
-import { PrismaClient } from "@prisma/client";
+import type { Amzn, Goog } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
+import { amazonMocks } from 'mocks/stocks';
+import { getAmazonsStocks, getGooglesStocks } from './stocks.server';
 
 const prisma = new PrismaClient();
-let amzn: Amzn | null = null
-let goog: Goog | null = null
+let amzn: Amzn | null = null;
+let goog: Goog | null = null;
 
-describe("Stock model", () => {
-  beforeAll(async () => {
-    await unSeed()
-  })
+describe('Stock model', () => {
+  beforeAll(async () => {});
 
   afterAll(async () => {
-    await unSeed()
-    await prisma.$disconnect()
-  })
+    await prisma.$disconnect();
+  });
 
-  test("can get all articles", async () => {
-    await prisma.amzn.create({ data: amazonMocks[0] })
-    await prisma.amzn.create({ data: amazonMocks[1] })
-    await prisma.amzn.create({ data: amazonMocks[2] })
-    await prisma.amzn.create({ data: amazonMocks[3] })
-    
+  test('check data amazon', async () => {
+    // await prisma.amzn.create({ data: amazonMocks[0] });
 
-    const amazonsStocks = await getAmazonsStocks()    
-    expect(amazonsStocks[0].highestPriceOfTheDay).toBeGreaterThanOrEqual(100)
-  })
-})
+    const amazonsStocks = await getAmazonsStocks(); // get from database
+    // check if type is Amzn
+    amazonsStocks.forEach((stock) => {
+      expect(typeof stock.highestPriceOfTheDay).toBe('number'); 
+      expect(typeof stock.lowestPriceOfTheDay).toBe('number');
+      expect(typeof stock.timestamp).toBe('number');
+      expect(stock.highestPriceOfTheDay).toBeGreaterThan(0);
+      expect(stock.lowestPriceOfTheDay).toBeGreaterThan(0);
+      expect(stock.highestPriceOfTheDay).toBeGreaterThanOrEqual(stock.lowestPriceOfTheDay);
+      expect(stock.timestamp).toBeGreaterThan(0);
+      expect(stock.timestamp).toBeLessThan(100000000000000000);
+    });
 
+  
+  });
+
+  test('check data google', async () => {
+    // await prisma.goog.create({ data: amazonMocks[0] });
+
+    const googlesStocks = await getGooglesStocks();
+
+    // check if type is Goog
+    googlesStocks.forEach((stock) => {
+      expect(typeof stock.highestPriceOfTheDay).toBe('number');
+      expect(typeof stock.lowestPriceOfTheDay).toBe('number');
+      expect(typeof stock.timestamp).toBe('number');
+      expect(stock.highestPriceOfTheDay).toBeGreaterThan(0);
+      expect(stock.lowestPriceOfTheDay).toBeGreaterThan(0);
+      expect(stock.highestPriceOfTheDay).toBeGreaterThanOrEqual(stock.lowestPriceOfTheDay);
+      expect(stock.timestamp).toBeGreaterThan(0);
+      expect(stock.timestamp).toBeLessThan(100000000000000000);
+    });
+
+  });
+});

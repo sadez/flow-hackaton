@@ -4,10 +4,13 @@ function TableHeader() {
   return (
     <Thead>
       <Tr>
-        <Th>highestPriceOfTheDay</Th>
-        <Th>into</Th>
-        <Th isNumeric>id</Th>
-        <Th>timestamp</Th>
+        <Th>Date</Th>
+        <Th>Action</Th>
+        <Th>Name</Th>
+        <Th>Prix unitaire</Th>
+        <Th>Nombre d’actions</Th>
+        <Th>Total</Th>
+        <Th>Portefeuille</Th>
       </Tr>
     </Thead>
   );

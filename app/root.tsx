@@ -7,7 +7,7 @@ export default function App() {
       <head>
         <meta charSet='utf-8' />
         <meta name='viewport' content='width=device-width,initial-scale=1' />
-        <title>Remix: So great, it's funny!</title>
+        <title>Meilleur moment pour acheter et pour vendre</title>
       </head>
       <body>
         <ChakraProvider>
