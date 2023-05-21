@@ -18,8 +18,6 @@ describe('test getOperationsFromTwoStocks ', () => {
 
     let operations = getOperationsFromTwoStocks(10000, amazonMocks, googleMocks);
 
-    console.log(operations);
-
     operations.forEach((operation,index) => {
       expect(['buy', 'sell']).toContain(operation.operation);
       expect(['amazon', 'google']).toContain(operation.stock);

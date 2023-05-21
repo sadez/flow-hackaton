@@ -41,6 +41,14 @@ Make sure to deploy the output of `remix build`
 
 # Some assumptions: 
 
-- Data contains same number of quotations
+- Amazon and Google stocks contains same occurence of price
 - We can sell some stock A and buy a stock B in the same day
+- the algorithm is based on buying in Troughs and selling in Peaks
 - 
+# tech stack:
+
+- UI : Chakra UI
+- Testing : Vitest (jest installed but not cofigured to support jsx) 
+- Framework : Remix
+- ORM : Prisma is configured but we used direct JSON for better performance
+
