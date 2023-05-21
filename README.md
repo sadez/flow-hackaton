@@ -37,17 +37,18 @@ Make sure to deploy the output of `remix build`
 - `build/`
 - `public/build/`
 
-### Using a Template
 
-When you ran `npx create-remix@latest` there were a few choices for hosting. You can run that again to create a new project, then copy over your `app/` folder to the new project that's pre-configured for your target server.
 
-```sh
-cd ..
-# create a new project, and pick a pre-configured host
-npx create-remix@latest
-cd my-new-remix-app
-# remove the new project's app (not the old one!)
-rm -rf app
-# copy your app over
-cp -R ../my-old-remix-app/app app
-```
+# Some assumptions: 
+
+- Amazon and Google stocks contains same occurence of price
+- We can sell some stock A and buy a stock B in the same day
+- the algorithm is based on buying in Troughs and selling in Peaks
+- 
+# tech stack:
+
+- UI : Chakra UI
+- Testing : Vitest (jest installed but not cofigured to support jsx) 
+- Framework : Remix
+- ORM : Prisma is configured but we used direct JSON for better performance
+

@@ -5,6 +5,4 @@ node_modules
 /public/build
 .env
 
-/prisma/AMZN-stock-price.json
-/prisma/GOOG-stock-price.json
 /prisma/dev.db
