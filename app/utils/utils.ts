@@ -6,6 +6,20 @@ export function findPeaksAndTroughs(array: Amzn[] | Goog[]): peaksAndTroughs {
   const end = array.length - 2; // Last index to search
   const obj: { peaks: number[]; troughs: number[] } = { peaks: [], troughs: [] }; // Object to store the indexs of peaks/thoughs
 
+
+  if(array.length === 0) {
+    return obj;
+  }
+  if(array.length === 1) {
+    return obj;
+  }
+
+
+  // check if firrst element is trough
+  if (array[0].lowestPriceOfTheDay < array[1].lowestPriceOfTheDay) {
+    obj.troughs.push(0);
+  }
+
   for (let i = start; i <= end; i++) {
     const current = array[i];
     const last = array[i - 1];
@@ -37,6 +51,8 @@ export function getOperationsFromTwoStocks(initialAmount: number, amazonsStocks:
   const amazonPeaksAndTroughs = findPeaksAndTroughs(amazonsStocks);
   const googlePeaksAndTroughs = findPeaksAndTroughs(googleStocks);
 
+  const length = amazonsStocks.length > googleStocks.length ? amazonsStocks.length : googleStocks.length;
+
   let budgetInHands = initialAmount;
 
   const listOfOperations: operation[] = [];
@@ -51,7 +67,7 @@ export function getOperationsFromTwoStocks(initialAmount: number, amazonsStocks:
     },
   };
 
-  for (let i = 0; i < amazonsStocks.length; i++) {
+  for (let i = 0; i < length; i++) {
     // if i in troughs buy
     if (amazonPeaksAndTroughs.troughs.includes(i)) {
       if (budgetInHands > amazonsStocks[i].lowestPriceOfTheDay) {
